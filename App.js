@@ -1,15 +1,11 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+
+
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,TouchableOpacity,Linking,ActivityIndicator,FlatList} from 'react-native';
+import {Platform, StyleSheet, Text, View,TouchableOpacity,Linking,ActivityIndicator,FlatList,Let} from 'react-native';
 import{Card,Image} from 'react-native-elements';
 import * as rssParser from 'react-native-rss-parser';
+
 
 
 export default class App extends Component{
@@ -25,9 +21,12 @@ export default class App extends Component{
       this.setState({
         isLoading: false,
         dataSource: rss.items,
+        
       })
-      console.log(rss.items.length);
-      fetch('https://www.cnbc.com/2019/05/24/fmr-us-agriculture-chief-on-beyond-meats-nutritional-reality.html').then((resp)=>{ return resp.text() }).then((text)=>{ console.log(text) })
+    for (let i of this.state.dataSource){
+      console.log(i.title);
+    }
+   
     });
   }
 
@@ -46,12 +45,14 @@ export default class App extends Component{
       <FlatList
           data= {this.state.dataSource}
           renderItem={({item}) => 
-                <Card title= {item.title}
+          <TouchableOpacity onPress={() => Linking.openURL(item.links[0].url)}>
+                <Card 
+                title= {item.title}
                 image =   {{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/CNBC_logo.svg/701px-CNBC_logo.svg.png'}}
-                onPress={() => Linking.openURL(item.links[0].url)}                   
                 >
                   <Text  >{item.description}</Text>
                   </Card>
+                  </TouchableOpacity>
           }
           keyExtractor={({item}, index) => item}
         />
